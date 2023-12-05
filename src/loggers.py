@@ -16,6 +16,8 @@ class BasicLogger:
         self.args = args
         self.log_dir = osp.join(
             args.log_dir, args.exp_name, self.get_random_time_str())
+        if not osp.exists(self.log_dir):
+            os.makedirs(self.log_dir, exist_ok=True)
         self.img_dir = osp.join(self.log_dir, "imgs")
         self.mesh_dir = osp.join(self.log_dir, "mesh")
         self.ckpt_dir = osp.join(self.log_dir, "ckpt")
