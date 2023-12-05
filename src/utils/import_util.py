@@ -2,11 +2,11 @@ from importlib import import_module
 import argparse
 
 def get_dataset(args):
-    Dataset = import_module("dataset."+args.dataset)
+    Dataset = import_module("Vox_Fusion.src.dataset."+args.dataset)
     return Dataset.DataLoader(**args.data_specs)
 
 def get_decoder(args):
-    Decoder = import_module("variations."+args.decoder)
+    Decoder = import_module("Vox_Fusion.src.variations."+args.decoder)
     return Decoder.Decoder(**args.decoder_specs)
 
 def get_property(args, name, default):

@@ -6,14 +6,14 @@ import numpy as np
 import torch
 import trimesh
 
-from criterion import Criterion
-from loggers import BasicLogger
-from utils.import_util import get_decoder, get_property
-from variations.render_helpers import bundle_adjust_frames
-from utils.mesh_util import MeshExtractor
+from Vox_Fusion.src.criterion import Criterion
+from Vox_Fusion.src.loggers import BasicLogger
+from Vox_Fusion.src.utils.import_util import get_decoder, get_property
+from Vox_Fusion.src.variations.render_helpers import bundle_adjust_frames
+from Vox_Fusion.src.utils.mesh_util import MeshExtractor
 
 torch.classes.load_library(
-    "third_party/sparse_octree/build/lib.linux-x86_64-3.7/svo.cpython-37m-x86_64-linux-gnu.so")
+    "/data/codes/DL-SLAM/DeepSLAM/deps/Vox_Fusion/third_party/sparse_octree/build/lib.linux-x86_64-cpython-37/svo.cpython-37m-x86_64-linux-gnu.so")
 
 
 def get_network_size(net):

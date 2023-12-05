@@ -1,8 +1,8 @@
 import torch
 import torch.nn as nn
 import numpy as np
-from se3pose import OptimizablePose
-from utils.sample_util import *
+from Vox_Fusion.src.se3pose import OptimizablePose
+from Vox_Fusion.src.utils.sample_util import *
 
 rays_dir = None
 

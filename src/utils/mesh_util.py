@@ -5,7 +5,7 @@ import numpy as np
 import open3d as o3d
 from scipy.spatial import cKDTree
 from skimage.measure import marching_cubes
-from variations.render_helpers import get_scores, eval_points
+from Vox_Fusion.src.variations.render_helpers import get_scores, eval_points
 
 
 class MeshExtractor:

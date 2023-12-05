@@ -1,11 +1,11 @@
 import torch
 from tqdm import tqdm
 
-from criterion import Criterion
-from frame import RGBDFrame
-from utils.import_util import get_property
-from utils.profile_util import Profiler
-from variations.render_helpers import fill_in, render_rays, track_frame
+from Vox_Fusion.src.criterion import Criterion
+from Vox_Fusion.src.frame import RGBDFrame
+from Vox_Fusion.src.utils.import_util import get_property
+from Vox_Fusion.src.utils.profile_util import Profiler
+from Vox_Fusion.src.variations.render_helpers import fill_in, render_rays, track_frame
 
 
 class Tracking:
