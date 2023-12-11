@@ -8,16 +8,16 @@ from torch.utils.data import Dataset
 
 
 class DataLoader(Dataset):
-    def __init__(self, data_path, max_depth=-1, vertical=False) -> None:
+    def __init__(self, input_folder, max_depth=-1, output=None, vertical=False) -> None:
 
         try:
-            csv_file = osp.join(data_path, 'data.csv')
+            csv_file = osp.join(input_folder, 'data.csv')
             data_reader = csv.reader(open(csv_file, 'r'))
-            self.data_path = data_path
+            self.data_path = input_folder
         except:
-            csv_file = osp.join(data_path, 'camera/data.csv')
+            csv_file = osp.join(input_folder, 'camera/data.csv')
             data_reader = csv.reader(open(csv_file, 'r'))
-            self.data_path = osp.join(data_path, 'camera')
+            self.data_path = osp.join(input_folder, 'camera')
         self.data_index = [f for f in data_reader][50:-50]
         self.max_depth = max_depth
         self.vertical = vertical

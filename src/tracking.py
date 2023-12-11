@@ -33,7 +33,7 @@ class Tracking:
         self.step_size = args.tracker_specs["step_size"]
         self.keyframe_freq = args.tracker_specs["keyframe_freq"]
         self.max_voxel_hit = args.tracker_specs["max_voxel_hit"]
-        self.max_distance = args.data_specs["max_depth"]
+        self.max_distance = args.data["max_depth"]
         self.step_size = self.step_size * self.voxel_size
 
         if self.end_frame <= 0:

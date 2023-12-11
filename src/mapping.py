@@ -54,7 +54,7 @@ class Mapping:
         self.max_voxel_hit = mapper_specs["max_voxel_hit"]
         self.step_size = mapper_specs["step_size"]
         self.step_size = self.step_size * self.voxel_size
-        self.max_distance = args.data_specs["max_depth"]
+        self.max_distance = args.data["max_depth"]
 
         embed_dim = args.decoder_specs["in_dim"]
         use_local_coord = mapper_specs["use_local_coord"]

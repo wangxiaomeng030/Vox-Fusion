@@ -8,27 +8,27 @@ from torch.utils.data import Dataset
 
 
 class DataLoader(Dataset):
-    def __init__(self, data_path, gt_pose=False,
-                 scale_factor=0, crop=0, depth_scale=1000.0, max_depth=10, **kwargs) -> None:
+    def __init__(self, input_folder, gt_pose=False,
+                 scale_factor=0, crop=0, depth_scale=1000.0, max_depth=10, output=None, **kwargs) -> None:
         self.crop = crop
-        self.depth_scale = depth_scale
-        self.data_path = data_path
+        self.depth_scale = depth_scale,
+        self.data_path = input_folder
         self.scale_factor = scale_factor
         self.gt_pose = gt_pose
-        num_imgs = len(glob(osp.join(data_path, 'color/*.jpg')))
+        num_imgs = len(glob(osp.join(input_folder, 'color/*.jpg')))
         self.max_depth = max_depth
         self.K = self.load_intrinsic()
         self.depth_files = [
-            osp.join(data_path, f'depth/{i}.png') for i in range(num_imgs)]
+            osp.join(input_folder, f'depth/{i}.png') for i in range(num_imgs)]
         self.image_files = [
-            osp.join(data_path, f'color/{i}.jpg') for i in range(num_imgs)]
+            osp.join(input_folder, f'color/{i}.jpg') for i in range(num_imgs)]
         self.pose_files = [
-            osp.join(data_path, f'pose/{i}.txt') for i in range(num_imgs)]
+            osp.join(input_folder, f'pose/{i}.txt') for i in range(num_imgs)]
         self.num_imgs = num_imgs
 
     def load_intrinsic(self):
         self.K = np.loadtxt(
-            osp.join(self.data_path, 'intrinsic/intrinsic_depth.txt'))[:3, :3]
+            osp.join(self.input_folder, 'intrinsic/intrinsic_depth.txt'))[:3, :3]
         if self.scale_factor > 0:
             scale = 2**self.scale_factor
             self.K = self.K / scale

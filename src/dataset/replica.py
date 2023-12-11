@@ -9,8 +9,8 @@ from torch.utils.data import Dataset
 
 
 class DataLoader(Dataset):
-    def __init__(self, data_path, use_gt=False, max_depth=-1) -> None:
-        self.data_path = data_path
+    def __init__(self, input_folder, use_gt=False, max_depth=-1, output=None) -> None:
+        self.data_path = input_folder
         self.num_imgs = len(glob(osp.join(self.data_path, "results/*.jpg")))
         self.max_depth = max_depth
         self.use_gt = use_gt

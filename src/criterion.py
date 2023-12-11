@@ -11,7 +11,7 @@ class Criterion(nn.Module):
         self.sdf_weight = args.criteria["sdf_weight"]
         self.fs_weight = args.criteria["fs_weight"]
         self.truncation = args.criteria["sdf_truncation"]
-        self.max_dpeth = args.data_specs["max_depth"]
+        self.max_dpeth = args.data["max_depth"]
 
     def forward(self, outputs, obs, use_color_loss=True,
                 use_depth_loss=True, compute_sdf_loss=True,

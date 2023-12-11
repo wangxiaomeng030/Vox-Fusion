@@ -3,7 +3,7 @@ import argparse
 
 def get_dataset(args):
     Dataset = import_module("Vox_Fusion.src.dataset."+args.dataset)
-    return Dataset.DataLoader(**args.data_specs)
+    return Dataset.DataLoader(**args.data)
 
 def get_decoder(args):
     Decoder = import_module("Vox_Fusion.src.variations."+args.decoder)
