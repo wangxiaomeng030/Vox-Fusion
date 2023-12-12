@@ -14,26 +14,34 @@ import yaml
 class BasicLogger:
     def __init__(self, args) -> None:
         self.args = args
-        self.log_dir = osp.join(
-            args.data['output'], args.exp_name, self.get_random_time_str())
+        self.log_dir = args.data['output'] #osp.join(args.data['output'], args.exp_name, self.get_random_time_str())
         if not osp.exists(self.log_dir):
             os.makedirs(self.log_dir, exist_ok=True)
         self.img_dir = osp.join(self.log_dir, "imgs")
         self.mesh_dir = osp.join(self.log_dir, "mesh")
-        self.ckpt_dir = osp.join(self.log_dir, "ckpt")
+        self.ckpt_dir = osp.join(self.log_dir, "ckpts")
         self.backup_dir = osp.join(self.log_dir, "bak")
         self.misc_dir = osp.join(self.log_dir, "misc")
 
-        os.makedirs(self.img_dir)
-        os.makedirs(self.ckpt_dir)
-        os.makedirs(self.mesh_dir)
-        os.makedirs(self.misc_dir)
-        os.makedirs(self.backup_dir)
+        os.makedirs(self.img_dir, exist_ok=True)
+        os.makedirs(self.ckpt_dir, exist_ok=True)
+        os.makedirs(self.mesh_dir, exist_ok=True)
+        os.makedirs(self.misc_dir, exist_ok=True)
+        os.makedirs(self.backup_dir, exist_ok=True)
 
         self.log_config(args)
 
     def get_random_time_str(self):
         return datetime.strftime(datetime.now(), "%Y-%m-%d-%H-%M-%S")
+    
+    def log_eval_tar(self, pose_gt, estimate_c2w_list, idx):
+        path = os.path.join(self.ckpt_dir, 'eval.tar')
+        torch.save({
+            'gt_c2w_list': pose_gt,
+            'estimate_c2w_list': estimate_c2w_list,
+            'idx': idx,
+        }, path, _use_new_zipfile_serialization=False)
+
 
     def log_ckpt(self, mapper):
         decoder_state = {f: v.cpu()
@@ -52,7 +60,7 @@ class BasicLogger:
         out_path = osp.join(self.backup_dir, "config.yaml")
         yaml.dump(config, open(out_path, 'w'))
 
-    def log_mesh(self, mesh, name="final_mesh.ply"):
+    def log_mesh(self, mesh, name="final_mesh_eval_rec.ply"):
         out_path = osp.join(self.mesh_dir, name)
         o3d.io.write_triangle_mesh(out_path, mesh)
 

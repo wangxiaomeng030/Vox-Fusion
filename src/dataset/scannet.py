@@ -50,6 +50,9 @@ class DataLoader(Dataset):
 
     def get_init_pose(self):
         return np.loadtxt(self.pose_files[0])
+    
+    def get_gt_pose(self, index):
+        return torch.Tensor((np.loadtxt(self.pose_files[index])).reshape(4, 4))
 
     def load_image(self, index):
         img = cv2.imread(self.image_files[index], -1)

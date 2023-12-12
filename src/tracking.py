@@ -65,6 +65,14 @@ class Tracking:
         progress_bar = tqdm(
             range(self.start_frame, self.end_frame), position=0)
         progress_bar.set_description("tracking frame")
+
+        n_img = self.end_frame - self.start_frame
+        estimate_c2w_list = torch.zeros((n_img, 4, 4))
+        gt_c2w_list = torch.zeros((n_img, 4, 4))
+
+        estimate_c2w_list[0] = self.data_stream.get_gt_pose(0)
+        gt_c2w_list[0] = self.data_stream.get_gt_pose(0)
+
         for frame_id in progress_bar:
             if share_data.stop_tracking:
                 break
@@ -84,6 +92,14 @@ class Tracking:
 
                 if self.render_freq > 0 and (frame_id + 1) % self.render_freq == 0:
                     self.render_debug_images(share_data, current_frame)
+
+                # output eval.tar
+                idx = current_frame.stamp
+                estimate_c2w_list[idx] = current_frame.pose.matrix().detach()
+                gt_c2w_list[idx] = self.data_stream.get_gt_pose(frame_id)
+                if frame_id == n_img -1:
+                    self.logger.log_eval_tar(gt_c2w_list[:idx], estimate_c2w_list[:idx], idx)
+
             except Exception as e:
                         print("error in dataloading: ", e,
                             f"skipping frame {frame_id}")

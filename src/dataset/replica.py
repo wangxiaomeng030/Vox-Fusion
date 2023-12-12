@@ -30,6 +30,10 @@ class DataLoader(Dataset):
             return self.gt_pose[0].reshape(4, 4)
         else:
             return np.eye(4)
+        
+    def get_gt_pose(self, idx):
+        return torch.Tensor(self.gt_pose[idx].reshape(4, 4))
+
 
     def load_gt_pose(self):
         gt_file = osp.join(self.data_path, 'traj.txt')
