@@ -64,8 +64,8 @@ class Tracking:
         kf_buffer.put(first_frame, block=True)
         self.last_frame = first_frame
         self.start_frame += 1
-        self.estimate_c2w_list[0] = torch.Tensor(init_pose)
-        self.relative_pose = self.gt_c2w_list[0] @ torch.linalg.inv(self.estimate_c2w_list[0])
+        self.relative_pose = self.gt_c2w_list[0] @ torch.linalg.inv(torch.Tensor(init_pose))
+        self.estimate_c2w_list[0] = self.gt_c2w_list[0]
 
     def spin(self, share_data, kf_buffer):
         print("******* tracking process started! *******")

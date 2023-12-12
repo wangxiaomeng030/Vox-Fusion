@@ -36,6 +36,12 @@ class BasicLogger:
     
     def log_eval_tar(self, pose_gt, estimate_c2w_list, idx):
         path = os.path.join(self.ckpt_dir, 'eval.tar')
+        for f in  pose_gt:
+            f[:3, 1] *= -1
+            f[:3, 2] *= -1
+        for f in  estimate_c2w_list:
+            f[:3, 1] *= -1
+            f[:3, 2] *= -1
         torch.save({
             'gt_c2w_list': pose_gt,
             'estimate_c2w_list': estimate_c2w_list,
