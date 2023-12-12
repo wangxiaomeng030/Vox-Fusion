@@ -114,7 +114,7 @@ class Mapping:
 
                 if self.mesh_freq > 0 and (tracked_frame.stamp + 1) % self.mesh_freq == 0:
                     self.logger.log_mesh(self.extract_mesh(
-                        res=self.mesh_res, clean_mesh=True), name=f"mesh_{tracked_frame.stamp:05d}.ply")
+                        res=self.mesh_res, clean_mesh=True), name=f"{tracked_frame.stamp:05d}_mesh.ply")
 
                 if self.save_data_freq > 0 and (tracked_frame.stamp + 1) % self.save_data_freq == 0:
                     self.save_debug_data(tracked_frame)

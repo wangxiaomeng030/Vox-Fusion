@@ -48,8 +48,13 @@ class Tracking:
         self.profiler = Profiler(verbose=verbose)
         self.profiler.enable()
 
+        self.n_img = self.end_frame - self.start_frame
+        self.estimate_c2w_list = torch.zeros((self.n_img, 4, 4))
+        self.gt_c2w_list = torch.zeros((self.n_img, 4, 4))
+
     def process_first_frame(self, kf_buffer):
         init_pose = self.data_stream.get_init_pose()
+        self.gt_c2w_list[0] = torch.Tensor(init_pose).clone()
         fid, rgb, depth, K, _ = self.data_stream[self.start_frame]
         first_frame = RGBDFrame(fid, rgb, depth, K, init_pose)
         first_frame.pose.requires_grad_(False)
@@ -59,19 +64,14 @@ class Tracking:
         kf_buffer.put(first_frame, block=True)
         self.last_frame = first_frame
         self.start_frame += 1
+        self.estimate_c2w_list[0] = torch.Tensor(init_pose)
+        self.relative_pose = self.gt_c2w_list[0] @ torch.linalg.inv(self.estimate_c2w_list[0])
 
     def spin(self, share_data, kf_buffer):
         print("******* tracking process started! *******")
         progress_bar = tqdm(
             range(self.start_frame, self.end_frame), position=0)
         progress_bar.set_description("tracking frame")
-
-        n_img = self.end_frame - self.start_frame
-        estimate_c2w_list = torch.zeros((n_img, 4, 4))
-        gt_c2w_list = torch.zeros((n_img, 4, 4))
-
-        estimate_c2w_list[0] = self.data_stream.get_gt_pose(0)
-        gt_c2w_list[0] = self.data_stream.get_gt_pose(0)
 
         for frame_id in progress_bar:
             if share_data.stop_tracking:
@@ -95,10 +95,11 @@ class Tracking:
 
                 # output eval.tar
                 idx = current_frame.stamp
-                estimate_c2w_list[idx] = current_frame.pose.matrix().detach()
-                gt_c2w_list[idx] = self.data_stream.get_gt_pose(frame_id)
-                if frame_id == n_img -1:
-                    self.logger.log_eval_tar(gt_c2w_list[:idx], estimate_c2w_list[:idx], idx)
+                self.estimate_c2w_list[idx] = self.relative_pose @ current_frame.pose.matrix().detach()
+                self.gt_c2w_list[idx] = self.data_stream.get_gt_pose(frame_id)
+
+                if frame_id == self.n_img -1:
+                    self.logger.log_eval_tar(self.gt_c2w_list[:idx], self.estimate_c2w_list[:idx], idx)
 
             except Exception as e:
                         print("error in dataloading: ", e,
